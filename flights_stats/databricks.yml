@@ -1,0 +1,48 @@
+# Databricks Asset Bundle configuration, more info here: https://docs.databricks.com/en/dev-tools/bundles/settings.html
+bundle:
+  name: "flights_stats"
+
+resources:
+  jobs:
+    Flights_analysis:
+      name: Flights analysis
+      trigger:
+        pause_status: PAUSED
+        periodic:
+          interval: 1
+          unit: DAYS
+      tasks:
+        - task_key: Calculate_flights
+          notebook_task:
+            notebook_path: ./Create flights.ipynb
+            base_parameters:
+              target_catalog: users
+              target_schema: william_conti
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
+
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    mode: production
+    resources:
+      jobs:
+        Flights_analysis:
+          name: Flights analysis
+          trigger:
+            pause_status: UNPAUSED
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+    run_as:
+      # This runs as a Service Principal in production
+      service_principal_name: "3af7ba7d-bb74-4f4d-8b01-c1ec38e0aac8"
