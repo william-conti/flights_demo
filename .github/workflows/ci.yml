@@ -36,7 +36,7 @@ jobs:
       # Deploy the bundle to the "dev" target as defined
       # in the bundle's settings file.
       - run: databricks bundle deploy -t dev
-        working-directory: .
+        working-directory: ./flights_stats
         env:
           DATABRICKS_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
